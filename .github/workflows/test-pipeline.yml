@@ -1,4 +1,4 @@
-name: Failure Pipeline #2.1
+name: Failure Pipeline 3
 
 on:
   workflow_dispatch:
@@ -7,14 +7,56 @@ on:
       - master
 
 jobs:
+
+  ssh-failure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulate SSH failure
+        run: |
+          echo "Connecting to production server..."
+          echo "ubuntu@10.0.0.25: Permission denied (publickey)."
+          exit 1
+
+
   docker-failure:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Trigger Docker image failure
+      - name: Trigger Docker failure
         run: |
-          echo "Starting Docker build..."
           docker pull python:this-tag-does-not-exist
+
+
+  terraform-failure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulate Terraform failure
+        run: |
+          echo "Error: Reference to undeclared resource"
+          echo "A managed resource aws_instance.webserver has not been declared."
+          exit 1
+
+
+  ansible-failure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulate Ansible failure
+        run: |
+          echo "fatal: [web01]: FAILED!"
+          echo "Missing sudo password"
+          exit 1
+
+
+  dependency-failure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger dependency failure
+        run: |
+          python -c "import module_that_does_not_exist"
+
+
+  networking-failure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger network failure
+        run: |
+          curl --fail --connect-timeout 5 http://127.0.0.1:65530
