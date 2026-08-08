@@ -1,10 +1,10 @@
-name: Failure Pipeline #2
+name: Failure Pipeline #2.1
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   docker-failure:
