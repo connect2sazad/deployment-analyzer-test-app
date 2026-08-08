@@ -1,4 +1,4 @@
-name: Failure Pipeline
+name: Failure Pipeline #2
 
 on:
   workflow_dispatch:
